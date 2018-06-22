@@ -1,13 +1,13 @@
 # Familynet Mobile Engineering Challenge
 
-##The role
+## The role
 
 
-##Context
+## Context
 
 A common user-case for mobile apps is a user account with associated credentials that allow the app to securely interact with a RESTful back-end API.
 
-##Use case
+## Use case
 
 The user is required to log into the app, authenticated against the back-end API. After a successful login, the API returns a JSON payload containing an API token.
 
@@ -38,9 +38,9 @@ password: password
 ```
 Assume that the back-end makes of use of standard HTTP success and error codes.
 
-##Challenge
+## Challenge
 
-###Required
+### Required
 
 * Build a simple native app (iOS or Android) that uses standard interface controls to provide the login and account profile screens.
 
@@ -50,7 +50,7 @@ Assume that the back-end makes of use of standard HTTP success and error codes.
 
 * Ensure that when the device captures a new image that the data sent back to the back-end is not greater than 1Mb.
 
-###Stretch goals
+### Stretch goals
 
 * Display the user’s avatar in a circle. Ensure that the photo is correctly positioned within the display area.
 
@@ -58,28 +58,28 @@ Assume that the back-end makes of use of standard HTTP success and error codes.
 
 * Implement the app using an alternative to the 'standard' MVC architecture, such as VIPER or MVVM.
 
-##What we're looking for
+## What we're looking for
 
 We're biased towards clean, readable and idiomatic code. Where there's a choice between cleverness and clarity, we'll pick clarity every time. Tests are good; intelligently-applied tests and consideration of edge cases is even better.
 
-##Server
+## Server
 
 A basic [Sinatra-based](http://sinatrarb.com) server app is included, to provide the backend described above.
 
 It exposes a basic API on port 3000.
 
-###Running the server
+### Running the server
 
-####Prerequisites
+#### Prerequisites
 
 * [Docker](https://www.docker.com) installed locally
 
-####Process
+#### Process
 
 * Change to the `sinatra` subdirectory
 * Build the server: `docker build -t server .` (note the trailing dot)
 * Run the server: `docker run --rm -p 3000:3000 server`
 
-###Postman Library
+### Postman Library
 
 A collection of Postman requests is [available](https://www.getpostman.com/collections/bf9de3813d9dd0f74962?_ga=2.161426621.1808206250.1503483118-1306924130.1503483118)
