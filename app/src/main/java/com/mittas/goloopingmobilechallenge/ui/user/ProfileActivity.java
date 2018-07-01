@@ -1,22 +1,21 @@
-package com.mittas.goloopingmobilechallenge.ui;
+package com.mittas.goloopingmobilechallenge.ui.user;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
 
 import com.mittas.goloopingmobilechallenge.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_profile);
 
         if (savedInstanceState == null) {
-            LoginFragment fragment = new LoginFragment();
+            ProfileFragment fragment = new ProfileFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, fragment, LoginFragment.TAG).commit();
+                    .add(R.id.fragment_container, fragment, ProfileFragment.TAG).commit();
         }
     }
 

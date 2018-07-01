@@ -2,9 +2,8 @@ package com.mittas.goloopingmobilechallenge;
 
 import android.app.Application;
 
-import com.mittas.starwarswiki.api.SwapiService;
-import com.mittas.starwarswiki.api.SwapiServiceHolder;
-import com.mittas.starwarswiki.data.LocalDatabase;
+import com.mittas.goloopingmobilechallenge.api.UserService;
+import com.mittas.goloopingmobilechallenge.api.UserServiceHolder;
 
 
 /**
@@ -21,11 +20,11 @@ public class BasicApp extends Application {
         appExecutors = new AppExecutors();
     }
 
-    public SwapiService getSwapiService() {
-        return SwapiServiceHolder.getInstance().getSwapiService();
+    public UserService getUserService() {
+        return UserServiceHolder.getInstance().getUserService();
     }
 
-    public Repository getRepository() {
-        return Repository.getInstance(getSwapiService(), appExecutors);
+    public UserRepository getRepository() {
+        return UserRepository.getInstance(getUserService(), appExecutors);
     }
 }

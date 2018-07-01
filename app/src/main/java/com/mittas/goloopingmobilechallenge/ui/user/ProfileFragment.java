@@ -1,4 +1,4 @@
-package com.mittas.goloopingmobilechallenge.ui;
+package com.mittas.goloopingmobilechallenge.ui.user;
 
 import android.content.Context;
 import android.net.Uri;
