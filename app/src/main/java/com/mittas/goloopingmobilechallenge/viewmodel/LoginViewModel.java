@@ -10,6 +10,7 @@ import com.mittas.goloopingmobilechallenge.UserRepository;
 public class LoginViewModel extends AndroidViewModel{
     private final UserRepository repository;
 
+
     public LoginViewModel(@NonNull Application application) {
         super(application);
 
@@ -18,6 +19,10 @@ public class LoginViewModel extends AndroidViewModel{
 
     public void onLoginRequest(final String username, final String password) {
         repository.onLoginRequest(username, password);
+    }
+
+    public boolean isLoggedIn() {
+        return repository.isLoggedIn();
     }
 }
 
