@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mittas.goloopingmobilechallenge.R;
+import com.mittas.goloopingmobilechallenge.util.Utility;
 import com.mittas.goloopingmobilechallenge.viewmodel.LoginViewModel;
 
 public class LoginFragment extends Fragment {
@@ -45,29 +46,21 @@ public class LoginFragment extends Fragment {
     }
 
     private void onLoginButtonPressed() {
-        if(isEditTextEmpty(usernameEditText)) {
+        if(Utility.isEditTextEmpty(usernameEditText)) {
             Toast.makeText(getActivity(), "Please enter a username", Toast.LENGTH_SHORT);
             return;
         }
 
-        if(isEditTextEmpty(passwordEditText)) {
+        if(Utility.isEditTextEmpty(passwordEditText)) {
             Toast.makeText(getActivity(), "Please enter a password", Toast.LENGTH_SHORT);
             return;
         }
 
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-
         if (viewModel != null) {
             viewModel.onLoginRequest(username, password);
         }
-    }
-
-    private boolean isEditTextEmpty(EditText editText) {
-        if (editText.getText().toString().trim().length() > 0) {
-            return false;
-        }
-        return true;
     }
 
 }
