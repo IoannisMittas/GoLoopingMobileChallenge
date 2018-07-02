@@ -5,6 +5,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 
 import com.mittas.goloopingmobilechallenge.api.UserService;
+import com.mittas.goloopingmobilechallenge.data.User;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
 
 public class UserRepository {
     private static UserRepository INSTANCE;
@@ -27,13 +32,38 @@ public class UserRepository {
         return INSTANCE;
     }
 
-    public void onLoginRequest(final String username, final String password) {
-
-    }
-
     public boolean isLoggedIn() {
         boolean defaultValue = Boolean.valueOf(resources.getString(R.string.is_logged_in_default));
         return preferences.getBoolean(resources.getString(R.string.is_logged_in_key), defaultValue);
     }
+
+    public void onLoginRequest(final String username, final String password) {
+        // POST sessions/new  by giving username and password and get back userid and token
+        User newUser = new User();
+        newUser.setEmail(username);
+        newUser.setPassword(password);
+
+
+
+
+        // if successful
+            // save token to sharedsettings
+
+            // GET user/userid using token in header bearer, using userid and get back email and avatar url
+
+
+            // launch profile activity with email and avatar_url got (inform the livedata: Resource<User> and
+            // profile is observing)
+
+        // else if unsuccessful
+            // inform about the unsuccess somehow the login activity
+    }
+
+    public void onAvatarChanged() {
+
+    }
+
+
+
 
 }
