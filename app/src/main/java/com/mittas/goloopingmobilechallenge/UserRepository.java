@@ -1,15 +1,14 @@
 package com.mittas.goloopingmobilechallenge;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
 import com.mittas.goloopingmobilechallenge.api.UserService;
 import com.mittas.goloopingmobilechallenge.data.User;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserRepository {
     private static UserRepository INSTANCE;
@@ -39,24 +38,70 @@ public class UserRepository {
 
     public void onLoginRequest(final String username, final String password) {
         // POST sessions/new  by giving username and password and get back userid and token
-        User newUser = new User();
-        newUser.setEmail(username);
-        newUser.setPassword(password);
+        User loginRequestUser = new User();
+        loginRequestUser.setEmail(username);
+        loginRequestUser.setPassword(password);
+        service.getNewUser(loginRequestUser).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User newUser = response.body();
+
+                    String userId = newUser.getUserId();
+                    String token = newUser.getToken();
+
+                    // Save token
+                    preferences.edit().
+                            putString(resources.getString(R.string.token_key), token).
+                            apply();
+
+                    loadEmailAndAvatarUrl(token, userId);
 
 
 
 
-        // if successful
-            // save token to sharedsettings
+                } else {
+                    // else if unsuccessful
+                    // inform about the unsuccess somehow the login activity
+                }
+            }
 
-            // GET user/userid using token in header bearer, using userid and get back email and avatar url
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // TODO do something
+            }
+        });
 
 
-            // launch profile activity with email and avatar_url got (inform the livedata: Resource<User> and
-            // profile is observing)
 
-        // else if unsuccessful
-            // inform about the unsuccess somehow the login activity
+
+    }
+
+    public void loadEmailAndAvatarUrl(String token, String userId) {
+        // GET user/userid using token in header bearer, using userid and get back email and avatar url
+        service.getUserById(token, userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+
+
+
+
+
+
+                    // launch profile activity with email and avatar_url got (inform the livedata: Resource<User> and
+                    // profile is observing)
+
+                } else {
+                    // TODO do something
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 
     public void onAvatarChanged() {

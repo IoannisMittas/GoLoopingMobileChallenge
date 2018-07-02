@@ -7,5 +7,6 @@
 
     <string name="is_logged_in_key" translatable="false">is_logged_in</string>
     <string name="is_logged_in_default" translatable="false">false</string>
+    <string name="token_key" translatable="false">token</string>
 
 </resources>
