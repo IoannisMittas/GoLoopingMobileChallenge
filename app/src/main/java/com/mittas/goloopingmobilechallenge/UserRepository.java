@@ -42,7 +42,7 @@ public class UserRepository {
         return observableUser;
     }
 
-    public void setUser(Resource<User> user) {
+    private void setUser(Resource<User> user) {
         observableUser.postValue(user);
     }
 
@@ -51,8 +51,22 @@ public class UserRepository {
         return preferences.getBoolean(resources.getString(R.string.is_logged_in_key), defaultValue);
     }
 
+    private void setLoggedIn(boolean isLoggedIn) {
+        String isLoggedInString = String.valueOf(isLoggedIn);
+
+        preferences
+                .edit()
+                .putString(resources.getString(R.string.is_logged_in_key), isLoggedInString)
+                .apply();
+    }
+
+    /**
+     * Using username and password, get back userid and token
+     *
+     * @param username
+     * @param password
+     */
     public void onLoginRequest(final String username, final String password) {
-        // Give username and password, to get back userid and token
         User loginRequestUser = new User();
         loginRequestUser.setEmail(username);
         loginRequestUser.setPassword(password);
@@ -77,6 +91,8 @@ public class UserRepository {
                             .putString(resources.getString(R.string.token_key), token)
                             .apply();
 
+                    setLoggedIn(true);
+
                     loadUser();
                 } else {
                     // Handle unsuccessful login
@@ -87,40 +103,45 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                // TODO do something
+                // Do nothing
             }
         });
-
-
     }
 
-    public void loadUser() {
-        // GET user/userid using token in header bearer, using userid and get back email and avatar url
+    /**
+     * Using userid and token, get back email and avatar url
+     */
+    private void loadUser() {
+               // Get userId from settings
+        String defaultUserId = resources.getString(R.string.user_id_default);
+        String userId = preferences.getString(resources.getString(R.string.user_id_key), defaultUserId);
 
-        // get userId from settings
+        // Get token from settings
+        String defaultToken = resources.getString(R.string.token_default);
+        String token = preferences.getString(resources.getString(R.string.user_id_key), defaultUserId);
 
-
-        // get token from settings
-
-
+        if((userId == defaultUserId) || (token == defaultToken)) {
+            return;
+        }
 
         service.getUserById(token, userId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    User user = response.body();
 
+                    Resource<User> userResource = Resource.success(user);
 
-                    // launch profile activity with email and avatar_url got (inform the livedata: Resource<User> and
-                    // profile is observing)
-
+                    setUser(userResource);
                 } else {
-                    // TODO do something
+                    // Handle unsuccessful user load
+                    // Do nothing
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                // Do nothing
             }
         });
     }

@@ -1,7 +1,9 @@
 package com.mittas.goloopingmobilechallenge.ui.user;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,8 +15,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mittas.goloopingmobilechallenge.R;
+import com.mittas.goloopingmobilechallenge.data.User;
 import com.mittas.goloopingmobilechallenge.util.Utility;
 import com.mittas.goloopingmobilechallenge.viewmodel.LoginViewModel;
+import com.mittas.goloopingmobilechallenge.vo.Resource;
+import com.mittas.goloopingmobilechallenge.vo.Status;
 
 public class LoginFragment extends Fragment {
     public static final String TAG = "LOGIN_FRAG";
@@ -43,6 +48,19 @@ public class LoginFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         viewModel = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
+        subscribeUi();
+    }
+
+    private void subscribeUi() {
+        viewModel.getUser().observe(this, (Observer<Resource<User>>) user -> {
+            if(user.status == Status.ERROR) {
+                Toast.makeText(getActivity(), user.message, Toast.LENGTH_SHORT);
+            } else if(user.status == Status.SUCCESS) {
+                // Start profile activity
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void onLoginButtonPressed() {
