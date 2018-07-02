@@ -1,10 +1,13 @@
 package com.mittas.goloopingmobilechallenge;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
 import com.mittas.goloopingmobilechallenge.api.UserService;
 import com.mittas.goloopingmobilechallenge.data.User;
+import com.mittas.goloopingmobilechallenge.vo.Resource;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,11 +20,15 @@ public class UserRepository {
     private final SharedPreferences preferences;
     private final Resources resources;
 
+    private final MutableLiveData<Resource<User>> observableUser;
+
     private UserRepository(UserService service, AppExecutors executors, SharedPreferences preferences, Resources resources) {
         this.service = service;
         this.executors = executors;
         this.preferences = preferences;
         this.resources = resources;
+
+       observableUser = new MutableLiveData<>();
     }
 
     public static UserRepository getInstance(final UserService service, final AppExecutors executors, final SharedPreferences preferences, final Resources resources) {
@@ -31,38 +38,50 @@ public class UserRepository {
         return INSTANCE;
     }
 
+    public LiveData<Resource<User>> getUser() {
+        return observableUser;
+    }
+
+    public void setUser(Resource<User> user) {
+        observableUser.postValue(user);
+    }
+
     public boolean isLoggedIn() {
         boolean defaultValue = Boolean.valueOf(resources.getString(R.string.is_logged_in_default));
         return preferences.getBoolean(resources.getString(R.string.is_logged_in_key), defaultValue);
     }
 
     public void onLoginRequest(final String username, final String password) {
-        // POST sessions/new  by giving username and password and get back userid and token
+        // Give username and password, to get back userid and token
         User loginRequestUser = new User();
         loginRequestUser.setEmail(username);
         loginRequestUser.setPassword(password);
+
         service.getNewUser(loginRequestUser).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     User newUser = response.body();
-
                     String userId = newUser.getUserId();
                     String token = newUser.getToken();
 
+                    // Save userId
+                    preferences
+                            .edit()
+                            .putString(resources.getString(R.string.user_id_key), userId)
+                            .apply();
+
                     // Save token
-                    preferences.edit().
-                            putString(resources.getString(R.string.token_key), token).
-                            apply();
+                    preferences
+                            .edit()
+                            .putString(resources.getString(R.string.token_key), token)
+                            .apply();
 
-                    loadEmailAndAvatarUrl(token, userId);
-
-
-
-
+                    loadUser();
                 } else {
-                    // else if unsuccessful
-                    // inform about the unsuccess somehow the login activity
+                    // Handle unsuccessful login
+                    Resource<User> failedResponse = Resource.error("Couldn't login. :(", null);
+                    setUser(failedResponse);
                 }
             }
 
@@ -73,20 +92,22 @@ public class UserRepository {
         });
 
 
-
-
     }
 
-    public void loadEmailAndAvatarUrl(String token, String userId) {
+    public void loadUser() {
         // GET user/userid using token in header bearer, using userid and get back email and avatar url
+
+        // get userId from settings
+
+
+        // get token from settings
+
+
+
         service.getUserById(token, userId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
-
-
-
-
+                if (response.isSuccessful()) {
 
 
                     // launch profile activity with email and avatar_url got (inform the livedata: Resource<User> and
@@ -107,8 +128,6 @@ public class UserRepository {
     public void onAvatarChanged() {
 
     }
-
-
 
 
 }
