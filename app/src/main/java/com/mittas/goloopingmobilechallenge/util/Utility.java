@@ -23,10 +23,6 @@ public class Utility {
     }
 
     public static String getBase64EncodedString(String filePath) {
-       // File file = new File(imageUri.toString());
-
-        Log.d("Psola", filePath);
-
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(filePath);
