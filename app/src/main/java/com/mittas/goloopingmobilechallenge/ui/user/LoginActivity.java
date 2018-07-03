@@ -21,10 +21,12 @@ public class LoginActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-        if(viewModel.isLoggedIn()) {
-           // Start profile activity
+        if (viewModel.isLoggedIn()) {
+            viewModel.loadUser();
+            // Start profile activity
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
+            finish();
         } else {
             if (savedInstanceState == null) {
                 LoginFragment fragment = new LoginFragment();
@@ -33,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
 }

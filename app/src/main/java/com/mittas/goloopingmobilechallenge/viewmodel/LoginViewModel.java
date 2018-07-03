@@ -33,6 +33,10 @@ public class LoginViewModel extends AndroidViewModel{
         return observableUser;
     }
 
+    public void loadUser() {
+        repository.loadUser();
+    }
+
     public void onLoginRequest(final String username, final String password) {
         repository.onLoginRequest(username, password);
     }

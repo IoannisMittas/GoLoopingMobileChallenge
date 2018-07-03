@@ -52,10 +52,10 @@ public class LoginFragment extends Fragment {
     }
 
     private void subscribeUi() {
-        viewModel.getUser().observe(this, (Observer<Resource<User>>) user -> {
-            if(user.status == Status.ERROR) {
-                Toast.makeText(getActivity(), user.message, Toast.LENGTH_SHORT).show();
-            } else if(user.status == Status.SUCCESS) {
+        viewModel.getUser().observe(this, (Observer<Resource<User>>) userResource -> {
+            if(userResource.status == Status.ERROR) {
+                Toast.makeText(getActivity(), userResource.message, Toast.LENGTH_SHORT).show();
+            } else if(userResource.status == Status.SUCCESS) {
                 // Start profile activity
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 startActivity(intent);
@@ -64,13 +64,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void onLoginButtonPressed() {
-        if(Utility.isEditTextEmpty(usernameEditText)) {
-            Toast.makeText(getActivity(), "Please enter a username", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if(Utility.isEditTextEmpty(passwordEditText)) {
-            Toast.makeText(getActivity(), "Please enter a password", Toast.LENGTH_SHORT).show();
+        if(Utility.isEditTextEmpty(usernameEditText) ||
+                Utility.isEditTextEmpty(passwordEditText)) {
+            Toast.makeText(getActivity(), "Please enter username and password", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -80,5 +76,4 @@ public class LoginFragment extends Fragment {
             viewModel.onLoginRequest(username, password);
         }
     }
-
 }

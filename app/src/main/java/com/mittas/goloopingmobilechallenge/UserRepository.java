@@ -114,14 +114,14 @@ public class UserRepository {
     /**
      * Using userid and token, get back email and avatar url
      */
-    private void loadUser() {
+    public void loadUser() {
                // Get userId from settings
         String defaultUserId = resources.getString(R.string.user_id_default);
         String userId = preferences.getString(resources.getString(R.string.user_id_key), defaultUserId);
 
         // Get token from settings
         String defaultToken = resources.getString(R.string.token_default);
-        String token = preferences.getString(resources.getString(R.string.user_id_key), defaultUserId);
+        String token = preferences.getString(resources.getString(R.string.token_key), defaultToken);
 
         if((userId == defaultUserId) || (token == defaultToken)) {
             return;
