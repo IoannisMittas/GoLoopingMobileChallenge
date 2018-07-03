@@ -22,11 +22,21 @@ public class Utility {
         return true;
     }
 
-    public static String getBase64EncodedString(Uri imageUri) {
-        InputStream inputStream = new FileInputStream(fileName);
+    public static String getBase64EncodedString(String filePath) {
+       // File file = new File(imageUri.toString());
+
+        Log.d("Psola", filePath);
+
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(filePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         byte[] bytes;
         byte[] buffer = new byte[8192];
         int bytesRead;
+
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             while ((bytesRead = inputStream.read(buffer)) != -1) {

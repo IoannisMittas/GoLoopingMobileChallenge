@@ -33,7 +33,7 @@ public class ProfileViewModel extends AndroidViewModel {
         return observableUser;
     }
 
-    public void onNewAvatar(Uri imageUri) {
-        repository.onNewAvatar(imageUri);
+    public void onNewAvatar(String imagePath) {
+        repository.onNewAvatar(imagePath);
     }
 }

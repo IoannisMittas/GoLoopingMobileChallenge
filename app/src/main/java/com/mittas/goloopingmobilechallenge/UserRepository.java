@@ -30,6 +30,8 @@ public class UserRepository {
 
     private final MutableLiveData<Resource<User>> observableUser;
 
+    private static final int MAX_IMAGE_SIZE_IN_BYTES = 1024;
+
     private UserRepository(UserService service, AppExecutors executors, SharedPreferences preferences, Resources resources) {
         this.service = service;
         this.executors = executors;
@@ -157,7 +159,14 @@ public class UserRepository {
         });
     }
 
-    public void onNewAvatar(Uri imageUri){
+    public void onNewAvatar(String imagePath){
+        // Encode avatar
+        String encodedImageString = Utility.getBase64EncodedString(imagePath);
+
+        if(!isImageSizeAccepted(encodedImageString)) {
+            return;
+        }
+
         // Get userId from settings
         String defaultUserId = resources.getString(R.string.user_id_default);
         String userId = preferences.getString(resources.getString(R.string.user_id_key), defaultUserId);
@@ -170,8 +179,6 @@ public class UserRepository {
             return;
         }
 
-        // Encode avatar
-        String encodedImageString = Utility.getBase64EncodedString(imageUri);
         User newAvatarUser = new User();
         newAvatarUser.setBase64EncodedAvatar(encodedImageString);
 
@@ -179,7 +186,13 @@ public class UserRepository {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful()) {
-                    loadUser();
+
+                    // --------------------------------------------------------------------
+                    // Normally we would load user to get the new avatar from the backend,
+                    // but because the backend always provides the same panda, we comment out
+                    // and we will update the profile picture locally
+
+                    //loadUser();
                 }
             }
 
@@ -188,6 +201,15 @@ public class UserRepository {
                 // Do nothing
             }
         });
+    }
+
+    private boolean isImageSizeAccepted(String encodedImageString) {
+        byte[] bytes = encodedImageString.getBytes();
+        if(bytes.length > MAX_IMAGE_SIZE_IN_BYTES) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

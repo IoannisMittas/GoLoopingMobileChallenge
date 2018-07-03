@@ -40,8 +40,14 @@ public class ProfileFragment extends Fragment {
         profileImageView.setOnClickListener(view -> {
             PickImageDialog.build(new PickSetup())
                     .setOnPickResult(result -> {
-                        Uri uri = result.getUri();
-                        onNewAvatar(uri);
+                        String imagePath = result.getPath();
+
+                        // Normally, this shouldn't exist and we would take the new avatar picture
+                        // from the backend, but because the backend provides the same picture,
+                        // we update the profile picture here, locally
+                        Glide.with(getActivity()).load(imagePath).into(profileImageView);
+
+                        onNewAvatar(imagePath);
                     })
                     .show(getActivity());
         });
@@ -71,9 +77,9 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void onNewAvatar(Uri imageUri) {
+    private void onNewAvatar(String imagePath) {
         if(viewModel != null) {
-            viewModel.onNewAvatar(imageUri);
+            viewModel.onNewAvatar(imagePath);
         }
     }
 
