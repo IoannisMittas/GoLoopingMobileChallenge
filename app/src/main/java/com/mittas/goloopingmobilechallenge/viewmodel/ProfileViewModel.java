@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.mittas.goloopingmobilechallenge.BasicApp;
@@ -30,5 +31,9 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public LiveData<Resource<User>> getUser() {
         return observableUser;
+    }
+
+    public void onNewAvatar(Uri imageUri) {
+        repository.onNewAvatar(imageUri);
     }
 }

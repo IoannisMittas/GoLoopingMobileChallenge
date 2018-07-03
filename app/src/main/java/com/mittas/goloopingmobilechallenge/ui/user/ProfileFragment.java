@@ -2,9 +2,6 @@ package com.mittas.goloopingmobilechallenge.ui.user;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.persistence.room.InvalidationTracker;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,20 +9,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.mittas.goloopingmobilechallenge.R;
 import com.mittas.goloopingmobilechallenge.data.User;
-import com.mittas.goloopingmobilechallenge.viewmodel.LoginViewModel;
 import com.mittas.goloopingmobilechallenge.viewmodel.ProfileViewModel;
 import com.mittas.goloopingmobilechallenge.vo.Resource;
 import com.mittas.goloopingmobilechallenge.vo.Status;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
 
 
 public class ProfileFragment extends Fragment {
@@ -44,7 +38,12 @@ public class ProfileFragment extends Fragment {
 
         profileImageView = rootView.findViewById(R.id.profile_imageview);
         profileImageView.setOnClickListener(view -> {
-
+            PickImageDialog.build(new PickSetup())
+                    .setOnPickResult(result -> {
+                        Uri uri = result.getUri();
+                        onNewAvatar(uri);
+                    })
+                    .show(getActivity());
         });
 
         return rootView;
@@ -67,15 +66,15 @@ public class ProfileFragment extends Fragment {
                 emailTextView.setText(email);
 
                 String avatarUrl = user.getAvatarUrl();
-//                RequestOptions requestOptions = new RequestOptions()
-//                        .override(200, 200);
-//                Glide.with(getActivity()).load(avatarUrl)
-//                        .apply(requestOptions)
-//                        .thumbnail(0.5f).into(profileImageView);
-
                 Glide.with(getActivity()).load(avatarUrl).into(profileImageView);
             }
         });
+    }
+
+    private void onNewAvatar(Uri imageUri) {
+        if(viewModel != null) {
+            viewModel.onNewAvatar(imageUri);
+        }
     }
 
 }

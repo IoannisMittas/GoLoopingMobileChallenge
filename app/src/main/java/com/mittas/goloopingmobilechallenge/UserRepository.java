@@ -4,10 +4,18 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.util.Base64;
 
 import com.mittas.goloopingmobilechallenge.api.UserService;
 import com.mittas.goloopingmobilechallenge.data.User;
+import com.mittas.goloopingmobilechallenge.util.Utility;
 import com.mittas.goloopingmobilechallenge.vo.Resource;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -115,7 +123,7 @@ public class UserRepository {
      * Using userid and token, get back email and avatar url
      */
     public void loadUser() {
-               // Get userId from settings
+        // Get userId from settings
         String defaultUserId = resources.getString(R.string.user_id_default);
         String userId = preferences.getString(resources.getString(R.string.user_id_key), defaultUserId);
 
@@ -149,9 +157,37 @@ public class UserRepository {
         });
     }
 
-    public void onAvatarChanged() {
+    public void onNewAvatar(Uri imageUri){
+        // Get userId from settings
+        String defaultUserId = resources.getString(R.string.user_id_default);
+        String userId = preferences.getString(resources.getString(R.string.user_id_key), defaultUserId);
 
+        // Get token from settings
+        String defaultToken = resources.getString(R.string.token_default);
+        String token = preferences.getString(resources.getString(R.string.token_key), defaultToken);
+
+        if((userId == defaultUserId) || (token == defaultToken)) {
+            return;
+        }
+
+        // Encode avatar
+        String encodedImageString = Utility.getBase64EncodedString(imageUri);
+        User newAvatarUser = new User();
+        newAvatarUser.setBase64EncodedAvatar(encodedImageString);
+
+        service.setNewAvatar(token, userId, newAvatarUser).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()) {
+                    loadUser();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Do nothing
+            }
+        });
     }
-
 
 }

@@ -20,7 +20,8 @@ public interface UserService {
     @GET("user/{userid}")
     Call<User> getUserById(@Header("Bearer") String token, @Path("userid") String userId);
 
-
-
+    @Headers("Content-Type: application/json")
+    @POST("user/{userid}/avatar")
+    Call<User> setNewAvatar(@Header("Bearer") String token, @Path("userid") String userId, @Body User newAvatarUser);
 
 }

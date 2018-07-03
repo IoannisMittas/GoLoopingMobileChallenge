@@ -18,8 +18,20 @@ public class User {
     @SerializedName("avatar_url")
     private String avatarUrl;
 
+    @SerializedName("avatar")
+    private String base64EncodedAvatar;
+
     public User() {
     }
+
+    public String getBase64EncodedAvatar() {
+        return base64EncodedAvatar;
+    }
+
+    public void setBase64EncodedAvatar(String base64EncodedAvatar) {
+        this.base64EncodedAvatar = base64EncodedAvatar;
+    }
+
 
     public String getPassword() {
         return password;
