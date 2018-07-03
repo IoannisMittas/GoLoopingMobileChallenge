@@ -47,8 +47,11 @@ public class UserRepository {
     }
 
     public boolean isLoggedIn() {
-        boolean defaultValue = Boolean.valueOf(resources.getString(R.string.is_logged_in_default));
-        return preferences.getBoolean(resources.getString(R.string.is_logged_in_key), defaultValue);
+        String defaultValue = resources.getString(R.string.is_logged_in_default);
+
+        String isLoggedInString =  preferences.getString(resources.getString(R.string.is_logged_in_key), defaultValue);
+
+        return Boolean.valueOf(isLoggedInString);
     }
 
     private void setLoggedIn(boolean isLoggedIn) {
@@ -96,7 +99,7 @@ public class UserRepository {
                     loadUser();
                 } else {
                     // Handle unsuccessful login
-                    Resource<User> failedResponse = Resource.error("Couldn't login. :(", null);
+                    Resource<User> failedResponse = Resource.error("Couldn't login :(", null);
                     setUser(failedResponse);
                 }
             }

@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment {
     private void subscribeUi() {
         viewModel.getUser().observe(this, (Observer<Resource<User>>) user -> {
             if(user.status == Status.ERROR) {
-                Toast.makeText(getActivity(), user.message, Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), user.message, Toast.LENGTH_SHORT).show();
             } else if(user.status == Status.SUCCESS) {
                 // Start profile activity
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
@@ -65,12 +65,12 @@ public class LoginFragment extends Fragment {
 
     private void onLoginButtonPressed() {
         if(Utility.isEditTextEmpty(usernameEditText)) {
-            Toast.makeText(getActivity(), "Please enter a username", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Please enter a username", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(Utility.isEditTextEmpty(passwordEditText)) {
-            Toast.makeText(getActivity(), "Please enter a password", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Please enter a password", Toast.LENGTH_SHORT).show();
             return;
         }
 

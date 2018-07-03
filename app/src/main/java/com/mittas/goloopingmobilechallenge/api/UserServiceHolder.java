@@ -5,10 +5,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserServiceHolder {
     private static UserServiceHolder INSTANCE;
-
     private UserService service;
 
-    private static final String BASE_URL = "localhost:3000/";
+    private static final String LOCALHOST = "http://192.168.1.4";
+
+    private static final String BASE_URL = LOCALHOST + ":3000/";
 
     private UserServiceHolder() {
         service = new Retrofit.Builder()
